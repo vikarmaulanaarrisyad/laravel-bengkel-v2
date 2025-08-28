@@ -5,6 +5,7 @@ use App\Http\Controllers\{
     ChartController,
     CheckoutController,
     DashboardController,
+    LocationController,
     OrderController,
     PaymentController,
     PermissionController,
@@ -20,6 +21,10 @@ use App\Http\Controllers\Front\FrontController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontController::class, 'index'])->name('front.index');
+Route::get('/get-regencies/{province_id}', [LocationController::class, 'getRegencies']);
+Route::get('/get-districts/{regency_id}', [LocationController::class, 'getDistricts']);
+Route::get('/get-villages/{district_id}', [LocationController::class, 'getVillages']);
+
 // MINI CART
 
 Route::get('/product/{slug}', [FrontController::class, 'detailProduct'])->name('front.detail_product');

@@ -29,17 +29,60 @@
                             <h3 class="title">Alamat Pengiriman</h3>
                         </div>
                         <div class="form-group">
+                            <label for="name">Nama Lengkap</label>
                             <input class="input form-control" type="text" name="name" id="name"
                                 placeholder="Nama Lengkap">
                         </div>
                         <div class="form-group">
-                            <input class="input form-control" type="text" name="address" id="address"
-                                placeholder="Alamat Lengkap">
+                            <label for="phone">Nomor Hp</label>
+                            <input class="form-control" type="number" name="phone" id="phone" placeholder="Nomor Hp">
                         </div>
+
+                        @php
+                            $provinces = App\Models\Province::all();
+                        @endphp
+
+                        <!-- Provinsi -->
                         <div class="form-group">
-                            <input class="input form-control" type="tel" name="phone" id="phone"
-                                placeholder="Nomor Hp">
+                            <label for="provinces">Provinsi</label>
+                            <select name="province_id" id="provinces" class="form-control">
+                                <option disabled selected>Pilih Provinsi</option>
+                                @foreach ($provinces as $province)
+                                    <option value="{{ $province->id }}">{{ $province->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
+
+                        <!-- Kabupaten -->
+                        <div class="form-group">
+                            <label for="regencies">Kabupaten / Kota</label>
+                            <select name="regency_id" id="regencies" class="form-control">
+                                <option disabled selected>Pilih Kabupaten</option>
+                            </select>
+                        </div>
+
+                        <!-- Kecamatan -->
+                        <div class="form-group">
+                            <label for="districts">Kecamatan</label>
+                            <select name="district_id" id="districts" class="form-control">
+                                <option disabled selected>Pilih Kecamatan</option>
+                            </select>
+                        </div>
+
+                        <!-- Desa -->
+                        <div class="form-group">
+                            <label for="villages">Desa</label>
+                            <select name="village_id" id="villages" class="form-control">
+                                <option disabled selected>Pilih Desa</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Alamat</label>
+                            <textarea name="address" id="address" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+
+
                     </div>
                     <!-- /Billing Details -->
 
@@ -52,7 +95,7 @@
 
                     <!-- Order Notes -->
                     <div class="order-notes">
-                        <textarea class="input form-control" placeholder="Catatan"></textarea>
+                        <textarea class="input form-control" cols="30" rows="10" placeholder="Catatan"></textarea>
                     </div>
                     <!-- /Order Notes -->
                 </div>
@@ -118,6 +161,7 @@
     <!-- /SECTION -->
 @endsection
 
+
 @push('scripts')
     <script>
         function checkout() {
@@ -125,6 +169,10 @@
             const address = $('#address').val();
             const phone = $('#phone').val();
             const orderNotes = $('.order-notes textarea').val();
+            const provinces = $('#provinces').val();
+            const regencies = $('#regencies').val();
+            const districts = $('#districts').val();
+            const villages = $('#villages').val();
 
             if (!name || !address || !phone) {
                 Swal.fire({
@@ -140,7 +188,10 @@
                 name: name,
                 address: address,
                 phone: phone,
-                order_notes: orderNotes,
+                provinces: provinces,
+                regencies: regencies,
+                districts: districts,
+                villages: villages,
                 _token: '{{ csrf_token() }}'
             };
 
@@ -258,4 +309,57 @@
             }
         }
     </style>
+@endpush
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+
+            // Provinsi -> Kabupaten
+            $('#provinces').on('change', function() {
+                let provinceId = $(this).val();
+                $('#regencies').html('<option selected disabled>Loading...</option>');
+                $('#districts').html('<option selected disabled>Pilih Kecamatan</option>');
+                $('#villages').html('<option selected disabled>Pilih Desa</option>');
+
+                $.get('/get-regencies/' + provinceId, function(data) {
+                    $('#regencies').html('<option disabled selected>Pilih Kabupaten</option>');
+                    $.each(data, function(index, regency) {
+                        $('#regencies').append('<option value="' + regency.id + '">' +
+                            regency.name + '</option>');
+                    });
+                });
+            });
+
+            // Kabupaten -> Kecamatan
+            $('#regencies').on('change', function() {
+                let regencyId = $(this).val();
+                $('#districts').html('<option selected disabled>Loading...</option>');
+                $('#villages').html('<option selected disabled>Pilih Desa</option>');
+
+                $.get('/get-districts/' + regencyId, function(data) {
+                    $('#districts').html('<option disabled selected>Pilih Kecamatan</option>');
+                    $.each(data, function(index, district) {
+                        $('#districts').append('<option value="' + district.id + '">' +
+                            district.name + '</option>');
+                    });
+                });
+            });
+
+            // Kecamatan -> Desa
+            $('#districts').on('change', function() {
+                let districtId = $(this).val();
+                $('#villages').html('<option selected disabled>Loading...</option>');
+
+                $.get('/get-villages/' + districtId, function(data) {
+                    $('#villages').html('<option disabled selected>Pilih Desa</option>');
+                    $.each(data, function(index, village) {
+                        $('#villages').append('<option value="' + village.id + '">' +
+                            village.name + '</option>');
+                    });
+                });
+            });
+
+        });
+    </script>
 @endpush

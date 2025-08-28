@@ -1,7 +1,7 @@
 ## FEATURE
 
 -   Rekapterkait detail transaksi pemesanan agar bisa mengetahui produk mana yg sering dipesan ✅
--   Field alamat pengiriman dibuat dropdown Jangan Input Manual (typing)
+-   Field alamat pengiriman dibuat dropdown Jangan Input Manual (typing) ✅
 -   Stock product mohon diperbaiki agar sesuai dg produk yang dipesan (realtime)
 -   Tambahkan Report /record laporan pembelian dan Penjualan produk
 -   Login ketik nama manual

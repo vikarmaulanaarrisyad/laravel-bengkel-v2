@@ -30,7 +30,6 @@
 
     <!-- Custom stlylesheet -->
     <link type="text/css" rel="stylesheet" href="{{ asset('frontend') }}/css/style.css" />
-
     @stack('css')
 
 </head>

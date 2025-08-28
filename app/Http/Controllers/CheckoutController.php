@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\District;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Province;
+use App\Models\Regency;
+use App\Models\Village;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -126,6 +130,12 @@ class CheckoutController extends Controller
             ], 400);
         }
 
+        $province = Province::where('id', $request->provinces)->first();
+        $regencies = Regency::where('id', $request->regencies)->first();
+        $districts = District::where('id', $request->districts)->first();
+        $villages = Village::where('id', $request->villages)->first();
+        // dd($province, $regencies, $districts);
+
         // Ambil data cart
         $carts = Cart::content();
         $totalAmount = (int) str_replace('.', '', Cart::subtotal());
@@ -148,6 +158,7 @@ class CheckoutController extends Controller
             }
         }
 
+
         DB::beginTransaction();
         try {
             // Simpan data order
@@ -162,6 +173,10 @@ class CheckoutController extends Controller
                 'status' => 'Pending',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'provinces' => $province->name,
+                'regencies' => $regencies->name,
+                'districts' => $districts->name,
+                'villages' => $villages->name,
             ]);
 
             // Simpan detail order dan kurangi stok
