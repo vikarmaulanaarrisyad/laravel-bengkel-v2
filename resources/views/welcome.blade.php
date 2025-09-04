@@ -163,7 +163,7 @@
                                                 Stok: {{ $product->stock }}
                                             </span>
                                             <span class="badge bg-primary">
-                                                Terjual: {{ $product->orderDetail->sum('count_product') ?? 0 }}
+                                                Terjual: {{ $product->orderDetail->sum('quantity') ?? 0 }}
                                             </span>
                                         </div>
                                         <hr>

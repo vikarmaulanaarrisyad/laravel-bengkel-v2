@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('order_id');
             $table->integer('rating')->default(0);
             $table->text('content')->nullable();
             $table->timestamps();

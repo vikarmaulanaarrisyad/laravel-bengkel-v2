@@ -13,6 +13,12 @@ class Order extends Model
         return $this->belongsTo(OrderDetail::class);
     }
 
+    // Order.php
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'order_id');
+    }
+
     public function orderDetail()
     {
         return $this->hasMany(OrderDetail::class, 'order_id');

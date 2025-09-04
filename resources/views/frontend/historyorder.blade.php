@@ -123,38 +123,63 @@
                             `;
                         });
 
-                        // TAMBAHKAN FORM REVIEW
                         let reviewHtml = '<h5 class="mt-4">Ulas Produk</h5>';
+
                         order.order_detail.forEach(function(item) {
                             const productName = item.product ? item.product.name :
                                 'Produk Tidak Dikenal';
                             const productId = item.product ? item.product.id : 0;
                             const orderId = order.id;
 
-                            reviewHtml += `
-                                <form action="/reviews" method="POST" class="mb-4">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                    <input type="hidden" name="product_id" value="${productId}">
-                                    <input type="hidden" name="order_id" value="${orderId}">
-                                    <div class="form-group">
-                                        <label>Produk: <strong>${productName}</strong></label><br>
-                                        <label>Rating:</label><br>
-                                        <div>
-                                            ${[1, 2, 3, 4, 5].map(r => `
-                                                            <label class="mr-2">
-                                                                <input type="radio" name="rating" value="${r}" required> ${r}⭐
-                                                            </label>
-                                                        `).join('')}
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="comment">Komentar:</label>
-                                        <textarea name="comment" class="form-control" rows="2" required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-success btn-sm">Kirim Review</button>
-                                </form>
-                            `;
+                            // cari review yang sesuai dengan product_id
+                            const review = order.reviews.find(r => r.product_id === productId);
+
+                            if (review) {
+                                // Sudah ada review
+                                reviewHtml += `
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">${productName}</h6>
+                    <p class="mb-1">Rating: ${'⭐'.repeat(review.rating)} (${review.rating}/5)</p>
+                    <p class="mb-0">Komentar: ${review.content}</p>
+                </div>
+            </div>
+        `;
+                            } else {
+                                // Belum ada review → tampilkan form
+                                reviewHtml += `
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">${productName}</h6>
+                    <form action="/reviews" method="POST" class="review-form">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="product_id" value="${productId}">
+                        <input type="hidden" name="order_id" value="${orderId}">
+
+                        <div class="form-group mb-2">
+                            <label>Rating:</label><br>
+                            ${[1, 2, 3, 4, 5].map(r => `
+                                    <label class="mr-2">
+                                        <input type="radio" name="rating" value="${r}" required> ${r}⭐
+                                    </label>
+                                `).join('')}
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label for="content">Komentar:</label>
+                            <textarea name="content" class="form-control" rows="2" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-sm">Kirim Review</button>
+                    </form>
+                </div>
+            </div>
+        `;
+                            }
                         });
+
+
+
                         $(modal + ' #modal-reviews').html(reviewHtml);
                     } else {
                         itemsHtml = '<tr><td colspan="4" class="text-center">No items found.</td></tr>';

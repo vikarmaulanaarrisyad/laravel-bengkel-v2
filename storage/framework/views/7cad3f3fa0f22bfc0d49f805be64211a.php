@@ -131,7 +131,7 @@
 
                                             </span>
                                             <span class="badge bg-primary">
-                                                Terjual: <?php echo e($product->orderDetail->sum('count_product') ?? 0); ?>
+                                                Terjual: <?php echo e($product->orderDetail->sum('quantity') ?? 0); ?>
 
                                             </span>
                                         </div>
@@ -140,8 +140,6 @@
                                             Rp <?php echo e(number_format($product->price, 0, ',', '.')); ?>
 
                                         </h4>
-
-
                                     </div>
                                     <div class="add-to-cart p-3 pt-0">
                                         <?php if($product->stock > 0): ?>

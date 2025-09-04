@@ -13,4 +13,10 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    // app/Models/OrderDetail.php
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
 }

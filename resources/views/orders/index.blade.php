@@ -18,9 +18,9 @@
                         {{--  <th>Resi</th>  --}}
                         <th>Tgl Transaksi</th>
                         <th>Nama Pelanggan</th>
-                        <th>Transaksi</th>
-                        <th>Status</th>
+                        <th>Ongkir</th>
                         <th>Total</th>
+                        <th>Status</th>
                         <th>Aksi</th>
                     </x-slot>
                 </x-table>
@@ -75,13 +75,13 @@
                     data: 'user.name'
                 },
                 {
-                    data: 'peyment_type'
-                },
-                {
-                    data: 'status'
+                    data: 'shipping_cost'
                 },
                 {
                     data: 'amount'
+                },
+                {
+                    data: 'status'
                 },
                 {
                     data: 'action',

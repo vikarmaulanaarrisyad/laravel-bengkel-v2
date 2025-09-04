@@ -101,9 +101,9 @@ class PaymentController extends Controller
             $product = Product::find($item->product_id);
             if ($product && $product->stock >= $item->quantity) {
                 // Kurangi stok produk
-                $product->update([
-                    'stock' => $product->stock - $item->quantity
-                ]);
+                // $product->update([
+                //     'stock' => $product->stock - $item->quantity
+                // ]);
             } else {
                 // Jika stok kurang dari 1, batalkan pembayaran
                 $order->update([

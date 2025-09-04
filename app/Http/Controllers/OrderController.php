@@ -35,6 +35,7 @@ class OrderController extends Controller
         return datatables($result)
             ->addIndexColumn()
             ->editColumn('tracking_number', fn($q) => $this->renderTrackingNumber($q))
+            ->editColumn('shipping_cost', fn($q) => $this->renderShippingCost($q))
             ->editColumn('invoice_number', fn($q) => $this->renderInvoiceNumber($q))
             ->editColumn('created_at', fn($q) => $this->renderTglTransaksi($q))
             ->editColumn('status', fn($q) => $this->renderStatus($q))
@@ -75,6 +76,12 @@ class OrderController extends Controller
     {
         return '<span class="badge badge-success">' . $q->invoice_number . '</span>';
     }
+
+    protected function renderShippingCost($q)
+    {
+        return format_uang($q->shipping_cost);
+    }
+
     protected function renderTrackingNumber($q)
     {
         return '<span class="badge badge-success">' . $q->tracking_number  . '</span>';
@@ -139,8 +146,8 @@ class OrderController extends Controller
 
     public function getOrderDetails($orderId)
     {
-        $order = Order::with('orderDetail.product')->findOrFail($orderId);
-
+        $order = Order::with(['orderDetail.product', 'reviews'])->findOrFail($orderId);
+        // return $order;
         return response()->json([
             'order' => $order
         ]);
