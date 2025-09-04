@@ -44,8 +44,9 @@ Route::group(
         Route::get('/get-regencies/{province_id}', [App\Http\Controllers\RajaOngkirController::class, 'cities']);
         Route::get('/checkout/history', [CheckoutController::class, 'history'])->name('front.checkout_history');
         Route::get('/order-details/{orderId}', [OrderController::class, 'getOrderDetails'])->name('order.details');
-    // Route laporan penjualan
-    Route::get('/laporanpenjualan', [LaporanPenjualanController::class, 'index'])->name('laporanpenjualan.index');
+        // Route laporan penjualan
+        Route::get('/laporanpenjualan/data', [LaporanPenjualanController::class, 'data'])->name('laporanpenjualan.data');
+        Route::get('/laporanpenjualan', [LaporanPenjualanController::class, 'index'])->name('laporanpenjualan.index');
         // Route stok offline
         Route::get('/stokoffline', [StokofflineController::class, 'index'])->name('stokoffline.index');
         Route::get('/stokoffline/{id}/edit', [StokofflineController::class, 'edit'])->name('stokoffline.edit');
