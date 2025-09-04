@@ -1,7 +1,5 @@
-@extends('layouts.front')
-
-@section('content')
-    @php
+<?php $__env->startSection('content'); ?>
+    <?php
         $categories = \App\Models\Category::all();
         $maxPrice = ceil(\App\Models\Product::max('price') / 10000) * 10000;
         $priceSteps = range(0, $maxPrice, 10000);
@@ -16,7 +14,7 @@
             ->with('category')
             ->paginate(12)
             ->withQueryString();
-    @endphp
+    ?>
 
     <div class="section">
         <div class="container">
@@ -27,9 +25,9 @@
                         <h3 class="title">New Products</h3>
                         <div class="section-nav">
                             <ul class="section-tab-nav tab-nav">
-                                @foreach ($categories->shuffle()->take(2) as $category)
-                                    <li><a data-toggle="tab" href="#tab1">{{ $category->name }}</a></li>
-                                @endforeach
+                                <?php $__currentLoopData = $categories->shuffle()->take(2); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <li><a data-toggle="tab" href="#tab1"><?php echo e($category->name); ?></a></li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                         </div>
                     </div>
@@ -37,51 +35,54 @@
 
                 <!-- Filter Form -->
                 <div class="col-md-12">
-                    <form method="GET" action="{{ route('front.index') }}" class="mb-4">
+                    <form method="GET" action="<?php echo e(route('front.index')); ?>" class="mb-4">
                         <div class="row">
                             <div class="col-md-2">
                                 <input type="text" name="search" class="form-control" placeholder="Cari produk..."
-                                    value="{{ request('search') }}">
+                                    value="<?php echo e(request('search')); ?>">
                             </div>
                             <div class="col-md-2">
                                 <select name="category" class="form-control">
                                     <option value="">Semua Kategori</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ request('category') == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }}
+                                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($category->id); ?>"
+                                            <?php echo e(request('category') == $category->id ? 'selected' : ''); ?>>
+                                            <?php echo e($category->name); ?>
+
                                         </option>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <select name="min_price" class="form-control">
                                     <option value="">Harga Min</option>
-                                    @foreach ($priceSteps as $step)
-                                        <option value="{{ $step }}"
-                                            {{ request('min_price') == $step ? 'selected' : '' }}>
-                                            Rp {{ number_format($step, 0, ',', '.') }}
+                                    <?php $__currentLoopData = $priceSteps; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $step): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($step); ?>"
+                                            <?php echo e(request('min_price') == $step ? 'selected' : ''); ?>>
+                                            Rp <?php echo e(number_format($step, 0, ',', '.')); ?>
+
                                         </option>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <select name="max_price" class="form-control">
                                     <option value="">Harga Max</option>
-                                    @foreach ($priceSteps as $step)
-                                        <option value="{{ $step }}"
-                                            {{ request('max_price') == $step ? 'selected' : '' }}>
-                                            Rp {{ number_format($step, 0, ',', '.') }}
+                                    <?php $__currentLoopData = $priceSteps; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $step): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($step); ?>"
+                                            <?php echo e(request('max_price') == $step ? 'selected' : ''); ?>>
+                                            Rp <?php echo e(number_format($step, 0, ',', '.')); ?>
+
                                         </option>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <select name="sort" class="form-control">
                                     <option value="">Urutkan Harga</option>
-                                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Termurah
+                                    <option value="asc" <?php echo e(request('sort') == 'asc' ? 'selected' : ''); ?>>Termurah
                                     </option>
-                                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Termahal
+                                    <option value="desc" <?php echo e(request('sort') == 'desc' ? 'selected' : ''); ?>>Termahal
                                     </option>
                                 </select>
                             </div>
@@ -89,7 +90,7 @@
                                 <button type="submit" class="btn btn-primary w-100">Filter</button>
                             </div>
                             <div class="col-md-1">
-                                <a href="{{ route('front.index') }}" class="btn btn-primary w-100">Reset</a>
+                                <a href="<?php echo e(route('front.index')); ?>" class="btn btn-primary w-100">Reset</a>
                             </div>
                         </div>
                     </form>
@@ -97,105 +98,77 @@
 
                 <!-- Produk -->
                 <div class="col-md-12">
-                    {{--  <div class="row">
-                        @forelse ($newProduct as $product)
-                            <div class="col-md-3 col-sm-6 mb-4">
-                                <div class="product">
-                                    <a href="{{ route('front.detail_product', ['slug' => $product->slug]) }}">
-                                        <div class="product-img">
-                                            <img src="{{ Storage::url($product->path_image) }}" alt=""
-                                                style="height: 200px; object-fit: contain;">
-                                            <div class="product-label">
-                                                <span class="new">NEW</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="product-body">
-                                        <p class="product-category">{{ $product->category?->name ?? 'Tanpa Kategori' }}</p>
-                                        <h3 class="product-name">
-                                            <a href="{{ route('front.detail_product', ['slug' => $product->slug]) }}">
-                                                {{ $product->name }}
-                                            </a>
-                                        </h3>
-                                        <h4 class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</h4>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        @if ($product->stock > 0)
-                                            <button onclick="addToCart({{ $product->id }})" class="add-to-cart-btn">
-                                                <i class="fa fa-shopping-cart"></i> add to cart
-                                            </button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="col-md-12">
-                                <p class="text-center">Tidak ada produk ditemukan.</p>
-                            </div>
-                        @endforelse
-                    </div>  --}}
+                    
                     <div class="row">
-                        @forelse ($newProduct as $product)
+                        <?php $__empty_1 = true; $__currentLoopData = $newProduct; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <div class="col-md-3 col-sm-6 mb-4">
                                 <div class="product shadow-sm rounded-3 border">
-                                    <a href="{{ route('front.detail_product', ['slug' => $product->slug]) }}">
+                                    <a href="<?php echo e(route('front.detail_product', ['slug' => $product->slug])); ?>">
                                         <div class="product-img text-center p-2">
-                                            <img src="{{ Storage::url($product->path_image) }}" alt="{{ $product->name }}"
+                                            <img src="<?php echo e(Storage::url($product->path_image)); ?>" alt="<?php echo e($product->name); ?>"
                                                 style="height: 200px; object-fit: contain;" class="img-fluid">
                                             <div class="product-label">
-                                                {{--  <span class="new">NEW</span>  --}}
+                                                
                                             </div>
                                         </div>
                                     </a>
                                     <div class="product-body p-3">
                                         <p class="product-category text-muted small mb-1">
-                                            {{ $product->category?->name ?? 'Tanpa Kategori' }}
+                                            <?php echo e($product->category?->name ?? 'Tanpa Kategori'); ?>
+
                                         </p>
                                         <h3 class="product-name h6 mb-2">
-                                            <a href="{{ route('front.detail_product', ['slug' => $product->slug]) }}"
+                                            <a href="<?php echo e(route('front.detail_product', ['slug' => $product->slug])); ?>"
                                                 class="text-dark text-decoration-none">
-                                                {{ $product->name }}
+                                                <?php echo e($product->name); ?>
+
                                             </a>
                                         </h3>
-                                        {{-- Badge stok & terjual --}}
+                                        
                                         <div class="d-flex gap-2 mb-5">
                                             <span class="badge bg-success">
-                                                Stok: {{ $product->stock }}
+                                                Stok: <?php echo e($product->stock); ?>
+
                                             </span>
                                             <span class="badge bg-primary">
-                                                Terjual: {{ $product->orderDetail->sum('count_product') ?? 0 }}
+                                                Terjual: <?php echo e($product->orderDetail->sum('count_product') ?? 0); ?>
+
                                             </span>
                                         </div>
                                         <hr>
                                         <h4 class="product-price text-danger fw-bold mt-3">
-                                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                                            Rp <?php echo e(number_format($product->price, 0, ',', '.')); ?>
+
                                         </h4>
+
+
                                     </div>
                                     <div class="add-to-cart p-3 pt-0">
-                                        @if ($product->stock > 0)
-                                            <button onclick="addToCart({{ $product->id }})"
+                                        <?php if($product->stock > 0): ?>
+                                            <button onclick="addToCart(<?php echo e($product->id); ?>)"
                                                 class="btn btn-sm btn-outline-dark w-100">
                                                 <i class="fa fa-shopping-cart"></i> Add to Cart
                                             </button>
-                                        @else
+                                        <?php else: ?>
                                             <button class="btn btn-sm btn-outline-danger w-100" disabled>
                                                 <i class="fa fa-times"></i> Stok Habis
                                             </button>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <div class="col-md-12">
                                 <p class="text-center">Tidak ada produk ditemukan.</p>
                             </div>
-                        @endforelse
+                        <?php endif; ?>
                     </div>
 
                     <!-- Pagination -->
                     <div class="row mt-4">
                         <div class="col-md-12 d-flex justify-content-center">
-                            {{ $newProduct->links() }}
+                            <?php echo e($newProduct->links()); ?>
+
                         </div>
                     </div>
                 </div>
@@ -203,4 +176,6 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.front', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\WEB PROJEK\laravel-bengkel\resources\views/welcome.blade.php ENDPATH**/ ?>

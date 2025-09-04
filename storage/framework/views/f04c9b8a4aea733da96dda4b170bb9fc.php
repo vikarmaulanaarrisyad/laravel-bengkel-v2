@@ -1,6 +1,4 @@
-@extends('layouts.front')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <!-- BREADCRUMB -->
     <div id="breadcrumb" class="section">
         <div class="container">
@@ -117,17 +115,17 @@
                                 <div><strong>SUBTOTAL</strong></div>
                             </div>
                             <div class="order-products">
-                                @foreach (Cart::content() as $cart)
+                                <?php $__currentLoopData = Cart::content(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cart): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="order-col">
-                                        <div>{{ $cart->qty }}x {{ $cart->name }}</div>
-                                        <div>Rp. {{ number_format($cart->subtotal, 0, ',', '.') }}</div>
+                                        <div><?php echo e($cart->qty); ?>x <?php echo e($cart->name); ?></div>
+                                        <div>Rp. <?php echo e(number_format($cart->subtotal, 0, ',', '.')); ?></div>
                                     </div>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                             <hr>
                             <div class="order-col">
                                 <div>Subtotal</div>
-                                <div><strong class="order-subtotal">Rp. {{ Cart::subtotal(0, ',', '.') }}</strong></div>
+                                <div><strong class="order-subtotal">Rp. <?php echo e(Cart::subtotal(0, ',', '.')); ?></strong></div>
                             </div>
                             <div class="order-col">
                                 <div>Ongkos Kirim</div>
@@ -137,14 +135,14 @@
                             <div class="order-col">
                                 <div><strong>TOTAL</strong></div>
                                 <div><strong class="order-total" id="grand-total">Rp.
-                                        {{ Cart::total(0, ',', '.') }}</strong>
+                                        <?php echo e(Cart::total(0, ',', '.')); ?></strong>
                                 </div>
                             </div>
                         </div>
 
                         <input type="hidden" name="shipping_cost" id="shipping_cost_input" value="0">
                         <input type="hidden" name="grand_total" id="grand_total_input"
-                            value="{{ Cart::total(0, '', '') }}">
+                            value="<?php echo e(Cart::total(0, '', '')); ?>">
 
                         <button type="submit" class="primary-btn btn-block order-submit">Buat Pesanan</button>
                     </div>
@@ -153,10 +151,10 @@
         </div>
     </div>
     <!-- /SECTION -->
-@endsection
+<?php $__env->stopSection(); ?>
 
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         // Helper function to format currency
         function formatRupiah(angka, prefix) {
@@ -268,10 +266,10 @@
                 $('#service').html('<option selected disabled>Mencari layanan...</option>');
 
                 $.ajax({
-                    url: '{{ route('rajaongkir.cost') }}',
+                    url: '<?php echo e(route('rajaongkir.cost')); ?>',
                     method: 'POST',
                     data: {
-                        _token: '{{ csrf_token() }}',
+                        _token: '<?php echo e(csrf_token()); ?>',
                         origin_id: $('#origin_id').val(),
                         destination_id: destination_id,
                         weight: $('#weight').val(),
@@ -319,7 +317,7 @@
             });
 
             function updateTotal(shippingCost = 0) {
-                let subtotal = {{ Cart::subtotal(0, '', '') }};
+                let subtotal = <?php echo e(Cart::subtotal(0, '', '')); ?>;
                 let grandTotal = parseInt(subtotal) + parseInt(shippingCost);
 
                 $('#shipping-cost').text(formatRupiah(shippingCost, 'Rp. '));
@@ -335,7 +333,7 @@
                 $('.order-submit').text('MEMPROSES...').attr('disabled', true);
 
                 $.ajax({
-                    url: '{{ route('front.checkout_store') }}',
+                    url: '<?php echo e(route('front.checkout_store')); ?>',
                     method: 'POST',
                     data: formData,
                     success: function(response) {
@@ -380,4 +378,6 @@
 
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.front', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\WEB PROJEK\laravel-bengkel\resources\views/frontend/checkout.blade.php ENDPATH**/ ?>

@@ -172,12 +172,29 @@ class OrderController extends Controller
 
         $client = new Client();
 
+        $response = $client->request('POST', env('RAJA_ONGKIR_API'), [
+            'headers' => [
+                'accept' => 'application/json',
+                // 'key' => '1vV2oHQwc7bd6d0953131ef4qXGm7eXo',
+                // 'key' => '1fd969e8011cefb27d112188e52248c4',
+                'key' => env('RAJAONGKIR_API_KEY'),
+            ],
+            'form_params' => [
+                'awb' => '0637132400441624',
+                'courier' => 'jne'
+            ]
+        ]);
+
+        return $response;
+
         try {
             // Kirim request ke API RajaOngkir
-            $response = $client->request('POST', 'https://rajaongkir.komerce.id/api/v1/track/waybill', [
+            $response = $client->request('POST', env('RAJA_ONGKIR_API'), [
                 'headers' => [
                     'accept' => 'application/json',
-                    'key' => '1vV2oHQwc7bd6d0953131ef4qXGm7eXo',
+                    // 'key' => '1vV2oHQwc7bd6d0953131ef4qXGm7eXo',
+                    // 'key' => '1fd969e8011cefb27d112188e52248c4',
+                    'key' => env('RAJAONGKIR_API_KEY'),
                 ],
                 'form_params' => [
                     'awb' => $request->input('awb'),

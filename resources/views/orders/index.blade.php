@@ -15,7 +15,7 @@
                     <x-slot name="thead">
                         <th>No</th>
                         <th>Invoice</th>
-                        <th>Resi</th>
+                        {{--  <th>Resi</th>  --}}
                         <th>Tgl Transaksi</th>
                         <th>Nama Pelanggan</th>
                         <th>Transaksi</th>
@@ -67,9 +67,6 @@
                 },
                 {
                     data: 'invoice_number'
-                },
-                {
-                    data: 'awb'
                 },
                 {
                     data: 'created_at'
